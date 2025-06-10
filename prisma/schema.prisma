@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  firebaseId String    @unique // Matches Firebase userId
+  name       String
+  role       Role
+  email      String    @unique
+  userInfo   UserInfo?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model UserInfo {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  firebaseId         String   @unique // Matches Firebase userId
+  user               User     @relation(fields: [firebaseId], references: [firebaseId])
+  location           String?
+  district           String
+  upazila            String
+  mobileNumber       String?
+  institution        String
+  institutionName    String
+  department         String?
+  year               Int?
+  userClass          Int?
+  experience         Int?
+  dateOfBirth        DateTime
+  gender             String?
+  description        String?
+  isLookingFor       Boolean
+  interestedSubjects String[]
+  profileImg         String?
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
